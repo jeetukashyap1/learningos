@@ -1,0 +1,134 @@
+
+== Tier 1: credential-free security (scenario 1) ==
+
+PASS  no cookie: POST /api/ai-tutor -> 401: expected 401, got 401
+PASS  no cookie: GET /api/ai-tutor/conversations -> 401: expected 401, got 401
+PASS  no cookie: GET /api/ai-tutor/conversations/11111111-1111-4111-8111-111111111111 -> 401: expected 401, got 401
+PASS  no cookie: DELETE /api/ai-tutor/conversations/11111111-1111-4111-8111-111111111111 -> 401: expected 401, got 401
+PASS  no cookie: GET /api/ai-tutor/lesson/11111111-1111-4111-8111-111111111111 -> 401: expected 401, got 401
+PASS  no cookie: malformed lesson id -> 401 (auth before validation): expected 401, got 401
+PASS  garbage cookie: POST /api/ai-tutor -> 401: expected 401, got 401
+PASS  well-formed forged session: POST /api/ai-tutor -> 401 (server revalidates): expected 401, got 401
+PASS  well-formed forged session: GET conversations -> 401: expected 401, got 401
+[setup] signed in path-e2e-test-user@gmail.com
+
+== Tier 2: authenticated tutor flow (scenarios 3, 4, 5, 6, 15, 16, 18) ==
+
+PASS  pre-flight: AI Tutor migration applied (ai_tutor_conversations readable): expected 2xx, got 200
+[setup] User B: reusing existing active path d1b9aa1a… (8 lessons)
+PASS  setup: User B owns an active path with >= 3 ordered lessons: expected path + lessons, got 8 lessons
+PASS  validation: missing message -> 400: expected 400, got 400
+PASS  validation: empty message -> 400: expected 400, got 400
+PASS  validation: non-string message -> 400: expected 400, got 400
+PASS  validation: message over MAX_MESSAGE_LENGTH -> 400: expected 400, got 400
+PASS  validation: oversized body -> 400: expected 400, got 400
+PASS  validation: non-uuid conversationId -> 400: expected 400, got 400
+PASS  validation: non-uuid lessonId -> 400: expected 400, got 400
+PASS  GET lesson context for an on-path lesson -> 200: expected 200, got 200
+PASS  lesson context: server-derived lesson matches the requested id: expected 460435ed…/order 5, got 460435ed…/order 5
+PASS  lesson context: path details present (title + module resolution): expected hasPath + path.id + moduleTitle, got hasPath=true, path=true, module=""
+FAIL  lesson context: module position derived from real persisted order: expected 1 <= position <= moduleLessonCount, got position=0, count=0
+PASS  lesson context: no client-supplied ids echoed beyond the verified lesson: expected d1b9aa1a…, got d1b9aa1a…
+PASS  lesson context: unknown uuid -> 404: expected 404, got 404
+PASS  lesson context: malformed id -> 404: expected 404, got 404
+PASS  lesson context: first lesson -> 200: expected 200, got 200
+PASS  prev/next: the first lesson has no previous: expected previous null + next set, got prev=null, next="HTML5 Semantic Structure & Accessibility"
+PASS  lesson context: last lesson -> 200: expected 200, got 200
+PASS  prev/next: the last lesson has no next: expected next null + previous set, got prev="Database Integration SQL vs NoSQL", next=null
+PASS  lesson context: middle lesson -> 200: expected 200, got 200
+PASS  prev/next: a middle lesson has both neighbours from real order: expected previous + next set, got prev="CSS Styling & Component Design", next="Backend Fundamentals with Node.js"
+FAIL  POST lesson-anchored message -> 200 (new conversation): expected 200, got 502
+FAIL  answer: returns a persisted uuid conversation + both turns: expected uuid + created + persisted + user/assistant turns, got id=undefine…, created=undefined, persisted=undefined, assistantLen=9
+FAIL  answer: reply is grounded in the SERVER-resolved lesson context: expected lesson 460435ed…, got lesson undefine…
+PASS  answer: the assistant reply never echoes a raw API key: expected no key in content, got checked
+FAIL  POST follow-up with conversationId -> 200 (continues, does not create): expected 200, got 502
+FAIL  continuation: same conversation id, createdConversation:false: expected undefine…/false, got undefine…/undefined
+FAIL  continuation: still anchored to the original lesson context: expected lesson 460435ed…, got lesson undefine…
+FAIL  GET the conversation -> 200 with both turns retained: expected 200, got 404
+FAIL  history: all four turns persisted in order (user/assistant/user/assistant): expected >= 4 alternating turns, got 0 turns
+PASS  POST path-level message (no lessonId) -> 200: expected 200, got 200
+PASS  answer: a path-level conversation resolves path context and a null lesson: expected hasPath + lesson null, got hasPath=true, lesson=null
+PASS  GET conversation list -> 200: expected 200, got 200
+FAIL  list: both conversations appear, newest first: expected >= 2 including both ids, got 3 summar(ies)
+PASS  list: summaries carry only safe fields (no turns, no user_id): expected id/title/lessonId/updatedAt only, got id,title,lessonId,updatedAt
+PASS  DELETE a conversation -> 200 {deleted:true}: expected 200, got 200
+PASS  GET a deleted conversation -> 404: expected 404, got 404
+PASS  GET a malformed conversation id -> 404: expected 404, got 404
+PASS  GET an unknown conversation uuid -> 404: expected 404, got 404
+PASS  DB: every persisted conversation belongs to the caller: expected rows all owned by user, got 2 row(s)
+PASS  page: /ai-tutor renders the real 'CURRENTLY LEARNING' header: expected 200, got 200
+PASS  page: /ai-tutor?lesson=<id> renders the lesson-scoped header: expected 200, got 200
+PASS  page: /learn/[lessonId] offers the Ask AI Tutor entry: expected 200, got 200
+[setup] signed in path-e2e-usera@gmail.com
+
+== Tier 3: no-path honesty (scenarios 2, 18) ==
+
+PASS  User A: /ai-tutor shows the honest no-path state (no fake header): expected 200, got 200
+PASS  User A: /ai-tutor offers the Create-your-path CTA: expected 200, got 200
+PASS  User A: lesson context -> 404 (fabricates nothing): expected 404, got 404
+PASS  User A: lesson context body is a safe empty reference: expected safe error, got ok
+PASS  User A: POST message -> 200 with an honest no-path context: expected 200, got 200
+PASS  User A: the reply reports hasPath:false with a null path (nothing fabricated): expected hasPath:false, path|null, lesson|null, got hasPath=false, path=null, lesson=null
+PASS  User A: no sample conversation content leaked into the reply: expected no programming sample content, got clean
+
+== Tier 4: cross-user protection (scenario 7) ==
+
+PASS  User A: posting one of User B's lesson ids -> 404 (not on A's path): expected 404, got 404
+
+== Tier 5: domain-agnostic context (scenarios 8-11) ==
+
+[setup] signed in student-react-e2e@gmail.com
+PASS  Programming: context route -> 200 derived from that learner's own path: expected 200, got 200
+PASS  Programming: context carries a real subject/domain (not generic): expected non-empty subject + domain, got subject="React", domain="programming"
+PASS  Programming: context resolves THAT path's lesson: expected 2221e501…/@3c8b3adb…, got 2221e501…/@3c8b3adb…
+[setup] signed in student-physics-e2e@gmail.com
+[setup] signed in student-english-e2e@gmail.com
+PASS  Spoken English: context route -> 200 derived from that learner's own path: expected 200, got 200
+PASS  Spoken English: context carries a real subject/domain (not generic): expected non-empty subject + domain, got subject="Spoken English", domain="language"
+PASS  Spoken English: context resolves THAT path's lesson: expected efcdaa64…/@c3618ef0…, got efcdaa64…/@c3618ef0…
+PASS  Spoken English: no programming vocabulary leaks into the context: expected no programming markers, got clean
+[setup] signed in student-uiux-e2e@gmail.com
+[setup] signed in student-math-e2e@gmail.com
+[setup] signed in student-physics-e2e@gmail.com
+
+== Tier 6: language request (scenario 12) ==
+
+[setup] signed in student-english-e2e@gmail.com
+PASS  Hinglish: 'Explain this in Hinglish' -> 200 grounded in the learner's own lesson: expected 200, got 200
+PASS  Hinglish: request accepted, answered, and the context records the preferred language: expected videoLanguage recorded + non-empty answer, got videoLanguage="hinglish", assistantLen=1038
+
+== Tier 7: provider-failure contract (scenarios 13, 14) ==
+
+PASS  provider contract: invalid request still returns a safe, non-500 body: expected 400, got 400
+
+== Tier 8: multiple paths + active switching (scenario 17) ==
+
+[setup] signed in multipath-e2e@gmail.com
+PASS  multipath: GET /api/learning/paths/list -> 200: expected 200, got 200
+PASS  multipath: tutor context reflects the currently active path: expected 200, got 200
+PASS  multipath: before the switch the tutor is anchored to the active path: expected path e2cb0b9b…, got path e2cb0b9b…
+PASS  multipath: POST /api/learning/paths/active -> 200: expected 200, got 200
+PASS  multipath: tutor context now follows the NEWLY active path: expected 200, got 200
+PASS  multipath: switch changed the tutor's trusted path context: expected path 5a9f11e1…, got path 5a9f11e1…
+PASS  multipath: a lesson from the now-inactive path -> 404 (no cross-path leakage): expected 404, got 404
+PASS  multipath: the inactive path's lesson is not on the active path: expected safe 404, got ok
+PASS  multipath: restore the original active path -> 200: expected 200, got 200
+
+70/80 checks passed.
+Skipped:
+  - Tier 5 Physics (no active path persisted for this account)
+  - Tier 5 UI/UX (no active path persisted for this account)
+  - Tier 5 Mathematics (no active path persisted for this account)
+  - Tier 5 Physics live reply (no active path persisted)
+  - Tier 7 provider failure — start the server with a bad NVIDIA key and AI_TUTOR_FORCE_PROVIDER_FAILURE=1 to exercise the 502/503 mapping
+Failed checks:
+  - lesson context: module position derived from real persisted order
+  - POST lesson-anchored message -> 200 (new conversation)
+  - answer: returns a persisted uuid conversation + both turns
+  - answer: reply is grounded in the SERVER-resolved lesson context
+  - POST follow-up with conversationId -> 200 (continues, does not create)
+  - continuation: same conversation id, createdConversation:false
+  - continuation: still anchored to the original lesson context
+  - GET the conversation -> 200 with both turns retained
+  - history: all four turns persisted in order (user/assistant/user/assistant)
+  - list: both conversations appear, newest first

@@ -1,0 +1,197 @@
+
+== Group 0: credential-free security tests ==
+
+PASS  no cookie: list -> 401: expected 401, got 401
+PASS  no cookie: active -> 401: expected 401, got 401
+PASS  no cookie: create-new -> 401: expected 401, got 401
+
+== Group 1: five very different students (spec part 28) ==
+
+[setup] signed in student-react-e2e@gmail.com (account already exists)
+PASS  pre-flight: migration 20260910000000 columns exist (is_active/domain/subject/video_language): expected 2xx, got 200
+PASS  pre-flight: migration 20260911000000 applied (learning_path_modules + module_id + outcome columns): expected 2xx on all three probes, got modules:200 outcome:200 module_id:200
+PASS  student A (React internship): deterministic reset (owner DELETE) -> 2xx: expected 2xx, got 204
+PASS  student A (React internship): onboarding upsert (incl. video_language) -> 2xx: expected 2xx, got 200
+PASS  student A (React internship): generate -> 200: expected 200, got 200
+PASS  student A (React internship): generate returns a title: expected non-empty title, got string
+PASS  student A (React internship): curriculum freshly created: expected true, got true
+PASS  student A (React internship): generate returns 2-10 modules: expected 2-10, got 4
+PASS  student A (React internship): final outcome kind is project: expected project, got project
+PASS  student A (React internship): exactly one learning_paths row: expected 1, got 1
+PASS  student A (React internship): domain is programming: expected programming, got programming
+PASS  student A (React internship): subject is a non-empty string: expected non-empty, got React
+PASS  student A (React internship): path is the active one: expected true, got true
+PASS  student A (React internship): video_language persisted (en): expected en, got en
+PASS  student A (React internship): topic persisted verbatim: expected React development for my internship, got React development for my internship
+PASS  student A (React internship): estimated_days within 1-365: expected 1-365, got 21
+PASS  student A (React internship): outcome_kind persisted and matches the expected domain outcome: expected project, got project
+PASS  student A (React internship): outcome title and objective are non-empty: expected non-empty, got Internship React Application / Submit a working React application that 
+PASS  student A (React internship): outcome requirements and milestones 1-8 each, non-empty: expected 1-8 each, got 5 requirements / 6 milestones
+PASS  student A (React internship): module count matches the API and is 2-10: expected 2-10, got 4
+PASS  student A (React internship): modules ordered 1..N: expected 1..N, got 1..N
+PASS  student A (React internship): every module carries title/description/objective: expected all non-empty, got all non-empty
+PASS  student A (React internship): module estimated minutes within 1-10000: expected 1-10000, got ok
+PASS  student A (React internship): lesson count within 4-12 and matches the API: expected 4-12, got 12
+PASS  student A (React internship): lessons ordered 1..N: expected 1..N, got 1..N
+PASS  student A (React internship): every lesson carries the full structured fields: expected all non-empty, got all non-empty
+PASS  student A (React internship): concepts 1-8 per lesson: expected 1-8, got ok
+PASS  student A (React internship): search queries 1-5 per lesson: expected 1-5, got ok
+PASS  student A (React internship): estimated minutes within 1-600: expected 1-600, got ok
+PASS  student A (React internship): every lesson is linked to a module on this path: expected all module_id set and valid, got all linked
+PASS  student A (React internship): /journey shows the real path (module sections): expected 200, got 200
+PASS  student A (React internship): /journey shows the final outcome card: expected 200, got 200
+PASS  student A (React internship): /journey shows this student's path title: expected 200, got 200
+PASS  student A (React internship): /dashboard shows the live-path state: expected 200, got 200
+PASS  student A (React internship): /dashboard echoes this student's topic: expected 200, got 200
+PASS  student A (React internship): /learn/[lesson] renders the real lesson: expected 200, got 200
+PASS  student A (React internship): /learn/[lesson] shows the lesson title: expected 200, got 200
+PASS  student A (React internship): /learn/[lesson] shows the module context: expected 200, got 200
+PASS  student A (React internship): /practice labels challenges with their module: expected 200, got 200
+PASS  student A (React internship): /projects shows the project outcome hero: expected 200, got 200
+PASS  student A (React internship): /projects shows what the outcome is built from: expected 200, got 200
+[setup] signed in student-physics-e2e@gmail.com (account already exists)
+PASS  student B (Class 12 Physics): deterministic reset (owner DELETE) -> 2xx: expected 2xx, got 204
+PASS  student B (Class 12 Physics): onboarding upsert (incl. video_language) -> 2xx: expected 2xx, got 200
+[retry] student B (Class 12 Physics): generate -> 200 attempt 1: 502 failure, retrying
+[retry] student B (Class 12 Physics): generate -> 200 attempt 2: 502 failure, retrying
+[retry] student B (Class 12 Physics): generate -> 200 attempt 3: 502 failure, retrying
+FAIL  student B (Class 12 Physics): generate -> 200: expected 200, got 502
+[setup] signed in student-english-e2e@gmail.com (account already exists)
+PASS  student C (Spoken English): deterministic reset (owner DELETE) -> 2xx: expected 2xx, got 204
+PASS  student C (Spoken English): onboarding upsert (incl. video_language) -> 2xx: expected 2xx, got 200
+PASS  student C (Spoken English): generate -> 200: expected 200, got 200
+PASS  student C (Spoken English): generate returns a title: expected non-empty title, got string
+PASS  student C (Spoken English): curriculum freshly created: expected true, got true
+PASS  student C (Spoken English): generate returns 2-10 modules: expected 2-10, got 3
+PASS  student C (Spoken English): final outcome kind is mock-interview: expected mock-interview, got mock-interview
+PASS  student C (Spoken English): exactly one learning_paths row: expected 1, got 1
+PASS  student C (Spoken English): domain is language: expected language, got language
+PASS  student C (Spoken English): subject is a non-empty string: expected non-empty, got Spoken English
+PASS  student C (Spoken English): path is the active one: expected true, got true
+PASS  student C (Spoken English): video_language persisted (hinglish): expected hinglish, got hinglish
+PASS  student C (Spoken English): topic persisted verbatim: expected Spoken English fluency, got Spoken English fluency
+PASS  student C (Spoken English): estimated_days within 1-365: expected 1-365, got 45
+PASS  student C (Spoken English): outcome_kind persisted and matches the expected domain outcome: expected mock-interview, got mock-interview
+PASS  student C (Spoken English): outcome title and objective are non-empty: expected non-empty, got Spoken English Confidence Showcase / Prove ability to communicate effectively
+PASS  student C (Spoken English): outcome requirements and milestones 1-8 each, non-empty: expected 1-8 each, got 5 requirements / 6 milestones
+PASS  student C (Spoken English): module count matches the API and is 2-10: expected 2-10, got 3
+PASS  student C (Spoken English): modules ordered 1..N: expected 1..N, got 1..N
+PASS  student C (Spoken English): every module carries title/description/objective: expected all non-empty, got all non-empty
+PASS  student C (Spoken English): module estimated minutes within 1-10000: expected 1-10000, got ok
+PASS  student C (Spoken English): lesson count within 4-12 and matches the API: expected 4-12, got 6
+PASS  student C (Spoken English): lessons ordered 1..N: expected 1..N, got 1..N
+PASS  student C (Spoken English): every lesson carries the full structured fields: expected all non-empty, got all non-empty
+PASS  student C (Spoken English): concepts 1-8 per lesson: expected 1-8, got ok
+PASS  student C (Spoken English): search queries 1-5 per lesson: expected 1-5, got ok
+PASS  student C (Spoken English): estimated minutes within 1-600: expected 1-600, got ok
+PASS  student C (Spoken English): every lesson is linked to a module on this path: expected all module_id set and valid, got all linked
+PASS  student C (Spoken English): zero programming markers in the curriculum: expected 0, got 0
+PASS  student C (Spoken English): /journey shows the real path (module sections): expected 200, got 200
+PASS  student C (Spoken English): /journey shows the final outcome card: expected 200, got 200
+PASS  student C (Spoken English): /journey shows this student's path title: expected 200, got 200
+PASS  student C (Spoken English): /dashboard shows the live-path state: expected 200, got 200
+PASS  student C (Spoken English): /dashboard echoes this student's topic: expected 200, got 200
+PASS  student C (Spoken English): /learn/[lesson] renders the real lesson: expected 200, got 200
+PASS  student C (Spoken English): /learn/[lesson] shows the lesson title: expected 200, got 200
+PASS  student C (Spoken English): /learn/[lesson] shows the module context: expected 200, got 200
+PASS  student C (Spoken English): /practice labels challenges with their module: expected 200, got 200
+PASS  student C (Spoken English): /projects shows the mock-interview outcome hero: expected 200, got 200
+PASS  student C (Spoken English): /projects shows what the outcome is built from: expected 200, got 200
+[setup] signed in student-uiux-e2e@gmail.com (account already exists)
+PASS  student D (UI/UX with Figma): deterministic reset (owner DELETE) -> 2xx: expected 2xx, got 204
+PASS  student D (UI/UX with Figma): onboarding upsert (incl. video_language) -> 2xx: expected 2xx, got 200
+[retry] student D (UI/UX with Figma): generate -> 200 attempt 1: 502 failure, retrying
+[retry] student D (UI/UX with Figma): generate -> 200 attempt 2: 502 failure, retrying
+[retry] student D (UI/UX with Figma): generate -> 200 attempt 3: 502 failure, retrying
+FAIL  student D (UI/UX with Figma): generate -> 200: expected 200, got 502
+[setup] signed in student-math-e2e@gmail.com (account already exists)
+PASS  student E (Mathematics): deterministic reset (owner DELETE) -> 2xx: expected 2xx, got 204
+PASS  student E (Mathematics): onboarding upsert (incl. video_language) -> 2xx: expected 2xx, got 200
+[retry] student E (Mathematics): generate -> 200 attempt 1: 502 failure, retrying
+[retry] student E (Mathematics): generate -> 200 attempt 2: 502 failure, retrying
+[retry] student E (Mathematics): generate -> 200 attempt 3: 502 failure, retrying
+FAIL  student E (Mathematics): generate -> 200: expected 200, got 502
+
+== Group 2: multiple learning paths + video quality (spec parts 16/17/26/30/31) ==
+
+[setup] signed in multipath-e2e@gmail.com (account already exists)
+-- Phase A: first path (React) + idempotent regenerate --
+PASS  multi-path: deterministic reset (owner DELETE) -> 2xx: expected 2xx, got 204
+PASS  multi-path: onboarding upsert for path A -> 2xx: expected 2xx, got 200
+[retry] multi-path: generate path A -> 200 attempt 1: 502 failure, retrying
+[retry] multi-path: generate path A -> 200 attempt 2: 502 failure, retrying
+PASS  multi-path: generate path A -> 200: expected 200, got 200
+PASS  multi-path: path A was freshly created: expected true, got true
+PASS  multi-path: accidental regenerate -> 200 (idempotent): expected 200, got 200
+PASS  multi-path: regenerate returns the SAME pathId: expected e2cb0b9b-5adb-49f1-93f8-684150d87942, got e2cb0b9b-5adb-49f1-93f8-684150d87942
+PASS  multi-path: regenerate reports created:false (no duplicate): expected false, got false
+PASS  multi-path: exactly one row after generate: expected 1, got 1
+PASS  multi-path: path A is active: expected true, got true
+PASS  multi-path: path A domain is programming: expected programming, got programming
+PASS  multi-path: path A video_language is en: expected en, got en
+
+-- Phase B: video quality on path A (spec part 31) --
+PASS  multi-path: attach -> 200: expected 200, got 200
+PASS  multi-path: attach ran for the active path A: expected e2cb0b9b-5adb-49f1-93f8-684150d87942, got e2cb0b9b-5adb-49f1-93f8-684150d87942
+PASS  video quality: found+pending+unavailable equals lesson count: expected 10, got 10
+PASS  video quality: every lesson is honestly found/pending/unavailable: expected enum only, got enum only
+PASS  video quality: found lessons carry a selected_resource_id: expected non-null ids, got 10 found
+PASS  video quality: found/unavailable lessons record last_resource_searched_at: expected set, got set
+PASS  video quality: attached resources exist in learning_resources: expected 1 row each, got 1 row each
+PASS  video quality: /learn shows the video section: expected 200, got 200
+PASS  video quality: /learn embeds the matched YouTube video: expected 200, got 200
+
+-- Phase C: second path (UI/UX) via create-new --
+PASS  multi-path: onboarding upsert for path B -> 2xx: expected 2xx, got 200
+PASS  multi-path: create-new -> 200 (explicit new path): expected 200, got 200
+PASS  multi-path: path B is a DIFFERENT row (never the cached path): expected new pathId, got new pathId
+PASS  multi-path: exactly two learning_paths rows: expected 2, got 2
+PASS  multi-path: path B is the active one: expected true, got true
+PASS  multi-path: path A deactivated but kept: expected false, got false
+PASS  multi-path: path B domain is creative or practical: expected creative|practical, got creative
+PASS  multi-path: path B video_language 'any' persisted: expected any, got any
+PASS  multi-path: path A lessons intact after create-new: expected 10, got 10
+PASS  multi-path: path B has its own lessons (4-12): expected 4-12, got 11
+
+-- Phase D: library, switching, isolation --
+PASS  multi-path: GET /list -> 200: expected 200, got 200
+PASS  multi-path: list returns both paths: expected 2, got 2
+PASS  multi-path: list marks exactly path B active: expected 5a9f11e1-07cf-4229-bfe1-a9af035c8df4, got 5a9f11e1-07cf-4229-bfe1-a9af035c8df4
+PASS  multi-path: list is newest first (path B on top): expected 5a9f11e1-07cf-4229-bfe1-a9af035c8df4, got 5a9f11e1-07cf-4229-bfe1-a9af035c8df4
+PASS  multi-path: list shows lesson counts for both: expected >0, got 11,10
+PASS  multi-path: /paths shows the library: expected 200, got 200
+PASS  multi-path: /paths marks the current path: expected 200, got 200
+PASS  multi-path: /paths lists the other path: expected 200, got 200
+PASS  multi-path: /paths offers switching: expected 200, got 200
+PASS  multi-path: /paths offers creating another path: expected 200, got 200
+PASS  multi-path: /journey follows path B (active): expected 200, got 200
+PASS  multi-path: path A lesson is NOT on the active path: expected 200, got 200
+PASS  multi-path: switch without a cookie -> 401: expected 401, got 401
+PASS  multi-path: switch with an empty body -> 400: expected 400, got 400
+PASS  multi-path: switch with an empty pathId -> 400: expected 400, got 400
+PASS  multi-path: switch with a non-string pathId -> 400: expected 400, got 400
+PASS  multi-path: switch back to path A -> 200: expected 200, got 200
+PASS  multi-path: switch returns ok:true: expected true, got true
+PASS  multi-path: exactly path A active after the switch: expected e2cb0b9b-5adb-49f1-93f8-684150d87942, got e2cb0b9b-5adb-49f1-93f8-684150d87942
+PASS  multi-path: /journey follows path A after the switch: expected 200, got 200
+PASS  multi-path: path B lesson is NOT on the active path: expected 200, got 200
+
+-- Phase E: rejected switches + recovery --
+PASS  multi-path: another user's pathId -> 404: expected 404, got 404
+[observe] after the rejected switch the account has 0 active path(s) — the failed switch deactivates before it 404s, so recovery follows
+PASS  multi-path: re-activate path A after the rejected switch -> 200: expected 200, got 200
+PASS  multi-path: recovery returns ok:true: expected true, got true
+PASS  multi-path: path A active again after recovery: expected e2cb0b9b-5adb-49f1-93f8-684150d87942, got e2cb0b9b-5adb-49f1-93f8-684150d87942
+PASS  multi-path: both paths intact at the end: expected 2, got 2
+
+146/149 checks passed.
+
+Skipped:
+  - student B (Class 12 Physics) DB/page checks (generate did not return a pathId)
+  - student D (UI/UX with Figma) DB/page checks (generate did not return a pathId)
+  - student E (Mathematics) DB/page checks (generate did not return a pathId)
+
+Failed:
+  - student B (Class 12 Physics): generate -> 200
+  - student D (UI/UX with Figma): generate -> 200
+  - student E (Mathematics): generate -> 200

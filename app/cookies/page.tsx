@@ -1,0 +1,2 @@
+import { LegalPage } from "@/components/legal-page";
+export default function CookiesPage(){return <LegalPage title="Cookies" summary="A transparent placeholder for how LearningOS will use browser storage and cookies." sections={[{heading:"Essential storage",body:"Some storage may be needed to keep the product secure and remember your preferences."},{heading:"Optional analytics",body:"Any future analytics will be limited, disclosed clearly, and controlled through your preferences."}]}/>}

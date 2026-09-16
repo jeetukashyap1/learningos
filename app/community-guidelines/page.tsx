@@ -1,0 +1,2 @@
+import { LegalPage } from "@/components/legal-page";
+export default function CommunityGuidelinesPage(){return <LegalPage title="Community guidelines" summary="Learning spaces work best when people can think out loud, ask basic questions, and share useful context without fear." sections={[{heading:"Be constructive",body:"Give feedback that helps someone take a better next step. Critique ideas and code, never a person."},{heading:"Respect boundaries",body:"Do not harass, impersonate, expose private information, or target people based on identity."}]}/>}

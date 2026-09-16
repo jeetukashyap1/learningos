@@ -1,0 +1,2 @@
+import { InfoPage } from "@/components/info-page";
+export default function AboutPage(){return <InfoPage eyebrow="About LearningOS" title="A learning operating system for people who want to build." description="LearningOS turns a broad goal into a focused path: useful resources, active practice, projects, and a clear next move." bullets={["Student-first by design, not content-first.","Progress means capability you can apply.","Every recommendation has a reason."]}/>}

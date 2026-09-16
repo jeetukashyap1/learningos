@@ -1,0 +1,2 @@
+import { LegalPage } from "@/components/legal-page";
+export default function ContentPolicyPage(){return <LegalPage title="Content policy" summary="Learning resources should be useful, lawful, and safe to engage with." sections={[{heading:"Useful and accurate",body:"We aim to recommend resources with clear context and will make room for corrections when something is outdated."},{heading:"No harmful content",body:"Content that encourages abuse, illegal activity, harassment, or dangerous behavior does not belong in the learning space."}]}/>}

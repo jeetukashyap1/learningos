@@ -1,0 +1,7 @@
+import Link from "next/link";
+import { ArrowLeft, Compass, RefreshCw, WifiOff } from "lucide-react";
+
+export function StatePage({ code, title, description, icon: Icon = Compass, action = "Back to dashboard", href = "/dashboard", onAction }: { code?: string; title: string; description: string; icon?: typeof Compass; action?: string; href?: string; onAction?: () => void }) { return <main className="container"><div style={{ maxWidth: 620, margin: "80px auto", textAlign: "center" }}><div className="move-icon" style={{ margin: "0 auto", background: "var(--lime)", color: "#10211b" }}><Icon size={25} /></div>{code && <div className="eyebrow" style={{ marginTop: 25 }}>{code}</div>}<h1 style={{ fontSize: 42, marginTop: 12 }}>{title}</h1><p className="muted" style={{ lineHeight: 1.7, marginTop: 14 }}>{description}</p>{onAction ? <button type="button" onClick={onAction} className="btn btn-dark" style={{ marginTop: 24 }}><ArrowLeft size={14} />{action}</button> : <Link href={href} className="btn btn-dark" style={{ marginTop: 24 }}><ArrowLeft size={14} />{action}</Link>}</div></main>; }
+
+export function OfflinePage() { return <StatePage title="You are offline." description="Your next learning move will be here when your connection returns. Nothing is lost." icon={WifiOff} action="Try again" href="/dashboard" />; }
+export function MaintenancePage() { return <StatePage title="A short pause for a better path." description="LearningOS is being tuned. Your progress and learning space will be ready soon." icon={RefreshCw} action="Return home" href="/" />; }

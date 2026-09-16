@@ -1,0 +1,2 @@
+import { InfoPage } from "@/components/info-page";
+export default function HelpPage(){return <InfoPage eyebrow="Help center" title="Learn how to use your learning space." description="LearningOS is intentionally simple: choose a direction, follow the next best move, and use practice to make the idea yours." bullets={["Use Journey to understand the sequence.","Use Practice when you want fast feedback.","Ask AI Tutor when the explanation needs to change."]}/>}

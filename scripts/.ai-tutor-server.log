@@ -1,0 +1,75 @@
+   ▲ Next.js 15.5.25
+   - Local:        http://localhost:3100
+   - Network:      http://10.156.193.169:3100
+
+ ✓ Starting...
+ ✓ Ready in 1656ms
+[ai-tutor] lesson context failed (not_found): lesson not on active path
+[ai-tutor] lesson context failed (not_found): malformed lesson id
+[ai-tutor] answer failed: Error [AiError]: TimeoutError: The operation was aborted due to timeout
+    at f (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\chunks\8844.js:95:13750)
+    at async t (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\chunks\9837.js:30:5713)
+    at async x (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\app\api\ai-tutor\route.js:1:1743)
+    at async k (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\app\api\ai-tutor\route.js:1:4753)
+    at async g (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\app\api\ai-tutor\route.js:1:5756)
+    at async D (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\app\api\ai-tutor\route.js:1:6878) {
+  kind: 'timeout',
+  safeMessage: 'Path generation took too long. Please try again.'
+}
+[ai-tutor] answer provider failure (timeout): TimeoutError: The operation was aborted due to timeout
+[ai-tutor] answer failed: Error [AiError]: TimeoutError: The operation was aborted due to timeout
+    at f (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\chunks\8844.js:95:13750)
+    at async t (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\chunks\9837.js:30:5713)
+    at async x (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\app\api\ai-tutor\route.js:1:1743)
+    at async k (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\app\api\ai-tutor\route.js:1:4753)
+    at async g (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\app\api\ai-tutor\route.js:1:5756)
+    at async D (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\app\api\ai-tutor\route.js:1:6878) {
+  kind: 'timeout',
+  safeMessage: 'Path generation took too long. Please try again.'
+}
+[ai-tutor] answer provider failure (timeout): TimeoutError: The operation was aborted due to timeout
+[ai-tutor] conversation lookup failed (not_found): conversation not owned or absent
+[ai-tutor] conversation lookup failed (not_found): conversation not owned or absent
+[ai-tutor] conversation lookup failed (not_found): conversation not owned or absent
+[ai-tutor] conversation lookup failed (not_found): conversation not owned or absent
+[ai-tutor] lesson context failed (not_found): lesson not on active path
+[ai-tutor] answer failed: Error [LearningPathError]: lesson 460435ed-e0bf-407e-935e-de5c1fa01c41 is not on the active path for user 033f1601-ad3d-4ee7-9480-1320b7ebbb1a
+    at t (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\chunks\9837.js:30:2517)
+    at async x (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\app\api\ai-tutor\route.js:1:1743)
+    at async k (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\app\api\ai-tutor\route.js:1:4753)
+    at async g (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\app\api\ai-tutor\route.js:1:5756)
+    at async D (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\app\api\ai-tutor\route.js:1:6878) {
+  kind: 'not_found',
+  safeMessage: 'We could not find that lesson on your current path.'
+}
+[ai-tutor] answer failed (not_found): lesson 460435ed-e0bf-407e-935e-de5c1fa01c41 is not on the active path for user 033f1601-ad3d-4ee7-9480-1320b7ebbb1a
+[ai-tutor] lesson context failed (not_found): lesson not on active path
+[ai-tutor] lesson context failed (not_found): lesson not on active path
+[ai-tutor] lesson context failed (not_found): malformed lesson id
+[ai-tutor] conversation lookup failed (not_found): conversation not owned or absent
+[ai-tutor] conversation lookup failed (not_found): conversation not owned or absent
+[ai-tutor] conversation lookup failed (not_found): conversation not owned or absent
+[ai-tutor] lesson context failed (not_found): lesson not on active path
+[ai-tutor] answer failed: Error [LearningPathError]: lesson 460435ed-e0bf-407e-935e-de5c1fa01c41 is not on the active path for user 033f1601-ad3d-4ee7-9480-1320b7ebbb1a
+    at t (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\chunks\9837.js:30:2517)
+    at async x (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\app\api\ai-tutor\route.js:1:1743)
+    at async k (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\app\api\ai-tutor\route.js:1:4753)
+    at async g (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\app\api\ai-tutor\route.js:1:5756)
+    at async D (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\app\api\ai-tutor\route.js:1:6878) {
+  kind: 'not_found',
+  safeMessage: 'We could not find that lesson on your current path.'
+}
+[ai-tutor] answer failed (not_found): lesson 460435ed-e0bf-407e-935e-de5c1fa01c41 is not on the active path for user 033f1601-ad3d-4ee7-9480-1320b7ebbb1a
+[ai-tutor] conversation lookup failed (not_found): conversation not owned or absent
+[ai-tutor] answer failed: Error [LearningPathError]: conversation 514ffbc8-f577-428c-8aae-a716413924e5 is not owned by user 033f1601-ad3d-4ee7-9480-1320b7ebbb1a
+    at t (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\chunks\9837.js:30:2305)
+    at async x (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\app\api\ai-tutor\route.js:1:1743)
+    at async k (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\app\api\ai-tutor\route.js:1:4753)
+    at async g (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\app\api\ai-tutor\route.js:1:5756)
+    at async D (C:\Users\kashy\OneDrive\Documents\Learningos\.next\server\app\api\ai-tutor\route.js:1:6878) {
+  kind: 'not_found',
+  safeMessage: 'That conversation was not found.'
+}
+[ai-tutor] answer failed (not_found): conversation 514ffbc8-f577-428c-8aae-a716413924e5 is not owned by user 033f1601-ad3d-4ee7-9480-1320b7ebbb1a
+[ai-tutor] conversation lookup failed (not_found): conversation not owned or absent
+[ai-tutor] lesson context failed (not_found): lesson not on active path

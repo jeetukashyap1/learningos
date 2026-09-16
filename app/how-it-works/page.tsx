@@ -1,0 +1,2 @@
+import { InfoPage } from "@/components/info-page";
+export default function HowItWorksPage(){return <InfoPage eyebrow="How it works" title="From curiosity to capability." description="LearningOS keeps the loop moving without making you manage a giant syllabus. Start with a direction, take the right-sized step, and use feedback to adapt." bullets={["Choose a goal and see the path.","Learn in focused, contextual sessions.","Practice, prove, and get your next action."]}/>}
