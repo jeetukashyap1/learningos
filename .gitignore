@@ -26,3 +26,8 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# local e2e / debug scratch artifacts (never commit)
+scripts/.*.log
+scripts/.*.txt
+scripts/**/.server.log
