@@ -64,7 +64,7 @@ export function TextField({ id, label, error, hint, ...input }: FieldProps) {
     <label htmlFor={id}>{label}</label>
     <input id={id} className={error ? "auth-input has-error" : "auth-input"} aria-invalid={error ? true : undefined} aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined} {...input} />
     {hint && !error ? <p className="auth-hint" id={`${id}-hint`}>{hint}</p> : null}
-    {error ? <p className="auth-error" id={`${id}-error}Error`} role="alert">{error}</p> : null}
+    {error ? <p className="auth-error" id={`${id}-error`} role="alert">{error}</p> : null}
   </div>;
 }
 
