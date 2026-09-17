@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Save } from "lucide-react";
 import { AuthNotice } from "@/components/auth-form";
 import { describeAuthError } from "@/lib/auth-errors";
@@ -13,6 +14,7 @@ const inputStyle = { display: "block", width: "100%", marginTop: 8, padding: "12
  * an account credential and changes through auth settings, not silently.
  */
 export function ProfileDetailsForm({ initialName, email }: { initialName: string | null; email: string }) {
+  const router = useRouter();
   const [name, setName] = useState(initialName ?? "");
   const [state, setState] = useState<"idle" | "saving">("idle");
   const [saved, setSaved] = useState(false);
@@ -47,6 +49,10 @@ export function ProfileDetailsForm({ initialName, email }: { initialName: string
       }
       setSaved(true);
       setState("idle");
+      // Re-run the server layout/page so the name resolved by getCurrentUser()
+      // (Profile header + AppShell avatar/header) reflects the saved value
+      // immediately, without a full page reload.
+      router.refresh();
     } catch (error) {
       setError(describeAuthError(error));
       setState("idle");

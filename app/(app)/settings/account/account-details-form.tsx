@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Save } from "lucide-react";
 import { AuthNotice } from "@/components/auth-form";
 import { describeAuthError } from "@/lib/auth-errors";
@@ -15,6 +16,7 @@ const inputStyle = { display: "block", width: "100%", marginTop: 8, padding: "12
  * onboarding and is edited by redoing onboarding.
  */
 export function AccountDetailsForm({ initialName, email, learningGoal, signedIn }: { initialName: string | null; email: string; learningGoal: string | null; signedIn: boolean }) {
+  const router = useRouter();
   const [name, setName] = useState(initialName ?? "");
   const [state, setState] = useState<"idle" | "saving">("idle");
   const [saved, setSaved] = useState(false);
@@ -53,6 +55,10 @@ export function AccountDetailsForm({ initialName, email, learningGoal, signedIn 
       }
       setSaved(true);
       setState("idle");
+      // Re-run the server layout/page so the name resolved by getCurrentUser()
+      // (this page + AppShell avatar/header) reflects the saved value
+      // immediately, without a full page reload.
+      router.refresh();
     } catch (error) {
       setError(describeAuthError(error));
       setState("idle");
