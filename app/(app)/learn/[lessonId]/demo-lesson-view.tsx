@@ -53,7 +53,7 @@ export function DemoLessonView() {
               An API request becomes easier to reason about when the method matches the intent. Read this example, then predict what should happen next.
             </p>
           </div>
-          <div className="card" style={{ position: "absolute", right: "8%", bottom: 28, zIndex: 2, padding: 18, color: "var(--ink)", width: "min(310px, 62%)", boxShadow: "0 20px 35px rgba(0,0,0,.18)" }}>
+          <div className="card mission-preview" style={{ position: "absolute", right: "8%", bottom: 28, zIndex: 2, padding: 18, color: "var(--ink)", width: "min(310px, 62%)", boxShadow: "0 20px 35px rgba(0,0,0,.18)" }}>
             <div className="mono muted" style={{ fontSize: 10 }}>REQUEST PREVIEW</div>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 13 }}><Play size={15} fill="currentColor" /><strong>PATCH /profile</strong></div>
             <p className="muted" style={{ fontSize: 12, lineHeight: 1.5, marginTop: 8 }}>Update only the fields that changed.</p>
@@ -90,7 +90,7 @@ export function DemoLessonView() {
         <LearningResources query={lesson.title} topic={lesson.concept} level="intermediate" />
 
         <div className="card pad section" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 18, flexWrap: "wrap" }}>
-          <div><div className="eyebrow">YOUR PROGRESS</div><h3 style={{ marginTop: 8 }}>{continued ? "Concept added to your path" : "One clear idea is enough for now."}</h3><div className="progress" style={{ marginTop: 14, width: 270 }}><span style={{ width: continued ? "100%" : `${lesson.progress}%` }} /></div></div>
+          <div style={{ flex: "1 1 240px", minWidth: 0 }}><div className="eyebrow">YOUR PROGRESS</div><h3 style={{ marginTop: 8 }}>{continued ? "Concept added to your path" : "One clear idea is enough for now."}</h3><div className="progress" style={{ marginTop: 14, width: "100%", maxWidth: 270 }}><span style={{ width: continued ? "100%" : `${lesson.progress}%` }} /></div></div>
           <div style={{ display: "flex", gap: 9, flexWrap: "wrap" }}><button type="button" className="btn btn-ghost"><Volume2 size={14} />Read aloud</button><button type="button" className="btn btn-primary" onClick={() => setContinued(true)}>Continue <ArrowRight size={14} /></button></div>
         </div>
       </div>

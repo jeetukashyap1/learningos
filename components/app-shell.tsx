@@ -168,7 +168,7 @@ export function AppShell({ children, banner }: { children: React.ReactNode; bann
 }
 
 export function PageHeader({ eyebrow, title, description, action }: { eyebrow: React.ReactNode; title: React.ReactNode; description?: React.ReactNode; action?: React.ReactNode }) {
-  return <div style={{ display: "flex", justifyContent: "space-between", gap: 20, alignItems: "end", marginBottom: 30 }}><div><div className="eyebrow">{eyebrow}</div><h1 style={{ marginTop: 12 }}>{title}</h1>{description && <p className="muted" style={{ marginTop: 12, maxWidth: 600, fontSize: 14, lineHeight: 1.6 }}>{description}</p>}</div>{action}</div>;
+  return <div style={{ display: "flex", justifyContent: "space-between", gap: 20, alignItems: "end", flexWrap: "wrap", marginBottom: 30 }}><div><div className="eyebrow">{eyebrow}</div><h1 style={{ marginTop: 12 }}>{title}</h1>{description && <p className="muted" style={{ marginTop: 12, maxWidth: 600, fontSize: 14, lineHeight: 1.6 }}>{description}</p>}</div>{action}</div>;
 }
 
 export function ArrowLink({ children, href = "#" }: { children: React.ReactNode; href?: string }) {

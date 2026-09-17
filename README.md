@@ -343,6 +343,36 @@ Run the migrations in order, then verify with
 **Port already in use.**
 Run on another port: `npm run dev -- -p 3001` or `npm start -- -p 3200`.
 
+**`npm run build` fails with `EINVAL: invalid argument, readlink '.next\…'`
+(or `ENOENT` on a `.next` file), even though the file exists.**
+The project is sitting inside a OneDrive‑synced folder. OneDrive *Files On‑Demand*
+turns build files into reparse points, so Node's `readlink`/cache writes fail
+because it mistakes them for symbolic links. Move the build output out of OneDrive
+by running this once from the project root (Windows):
+
+```bat
+scripts\setup-external-build-dir.cmd
+```
+
+It points `.next` at `%USERPROFILE%\LearningOS-build\.next` through a directory
+junction, and adds a matching `node_modules` link so the compiled server can still
+resolve packages. The folder is ignored by Git, so it does not affect your
+repository. Afterwards `npm run build` runs normally. On macOS/Linux, or if you
+prefer not to use junctions, simply pause OneDrive while building.
+
+**`npm run build` fails during "Generating static pages" with a Next.js-internal
+error** — for example `Invariant: Expected workUnitAsyncStorage to have a store.
+This is a bug in Next.js.`, or `EBUSY: resource busy or locked, open
+'…\.next\server\chunks\…'` on a page that built fine before. This is a stale /
+half-written build artifact, not an app bug. Recreate the build output from
+scratch by running the setup script again — it wipes the external `.next`
+directory before relinking — then rebuild:
+
+```bat
+scripts\setup-external-build-dir.cmd
+npm run build
+```
+
 ---
 
 ## Deployment

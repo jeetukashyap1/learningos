@@ -39,7 +39,7 @@ export function YouTubeEmbed({ videoId, title, onDismiss }: YouTubeEmbedProps) {
           <YoutubeIcon size={14} /> Now playing
         </p>
         {onDismiss ? (
-          <button type="button" className="btn ghost" onClick={onDismiss} aria-label="Close video player">
+          <button type="button" className="btn btn-ghost" onClick={onDismiss} aria-label="Close video player">
             <X size={15} /> Close
           </button>
         ) : null}

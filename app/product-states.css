@@ -28,7 +28,7 @@
 
 /* ---------- New-user dashboard: path explainer ---------- */
 
-.path-explainer { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+.path-explainer { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 14px; }
 .path-step { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 20px; display: grid; gap: 14px; align-content: start; box-shadow: var(--shadow); }
 .path-step-icon { width: 38px; height: 38px; border-radius: 12px; background: var(--mint); display: grid; place-items: center; }
 .path-step-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 7px; }
@@ -53,13 +53,13 @@
 .onboarding-chip { border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 999px; padding: 8px 14px; font-size: 12px; font-weight: 700; transition: border-color .2s, background .2s, color .2s; }
 .onboarding-chip:hover { border-color: var(--ink); }
 .onboarding-chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-.onboarding-nav { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-top: 36px; padding-top: 26px; border-top: 1px solid var(--line); }
+.onboarding-nav { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px; margin-top: 36px; padding-top: 26px; border-top: 1px solid var(--line); }
 .btn:disabled { cursor: not-allowed; }
 .btn:disabled:hover { transform: none; }
 
 /* ---------- Authentication ---------- */
 
-.auth-shell { min-height: 100vh; display: grid; grid-template-columns: 1.05fr 1fr; }
+.auth-shell { min-height: 100vh; min-height: 100dvh; display: grid; grid-template-columns: 1.05fr 1fr; }
 .auth-brand { background: var(--navy); color: white; padding: 48px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
 .auth-brand:after { content: ''; position: absolute; width: 430px; height: 430px; border-radius: 50%; border: 1px solid rgba(199,243,106,.18); right: -170px; top: -170px; }
 .auth-brand .brand { color: white; padding: 0; position: relative; }
@@ -90,7 +90,7 @@
 .auth-input:-webkit-autofill { -webkit-box-shadow: 0 0 0 60px var(--card) inset; -webkit-text-fill-color: var(--ink); caret-color: var(--ink); }
 .auth-input-wrap { position: relative; }
 .auth-input-wrap .auth-input { padding-right: 54px; }
-.auth-toggle { position: absolute; right: 7px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; display: grid; place-items: center; border: 0; background: transparent; border-radius: 9px; color: var(--muted); transition: color .2s, background .2s; }
+.auth-toggle { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; display: grid; place-items: center; border: 0; background: transparent; border-radius: 9px; color: var(--muted); transition: color .2s, background .2s; }
 .auth-toggle:hover { color: var(--ink); background: var(--paper); }
 .auth-hint { margin: 0; font-size: 11px; color: var(--muted); }
 .auth-error { margin: 0; font-size: 12px; font-weight: 700; color: var(--error); }
@@ -116,5 +116,7 @@
   .empty-state { padding: 52px 20px; }
   .onboarding-nav .btn { padding: 12px 14px; }
   .auth-panel-inner { padding: 36px 20px; }
-  .auth-footer { gap: 18px; }
+  .auth-footer { gap: 18px; flex-wrap: wrap; }
+  /* 16px keeps iOS Safari from zooming the layout when a field gains focus. */
+  .auth-input { font-size: 16px; }
 }
