@@ -9,6 +9,7 @@ import { isNotificationError } from "@/lib/notifications/errors";
 import { buildNotificationSignals, countUnreadSignals, loadNotificationReadKeys, NO_READ_KEYS } from "@/lib/notifications/service";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { NotificationRow } from "./notification-row";
+import { UnreadSummary } from "./unread-summary";
 
 /** Frozen sample notifications for anonymous demo mode only. */
 const sampleNotifications = [
@@ -101,7 +102,10 @@ export default async function NotificationsPage() {
  * their stable keys) come from lib/notifications/service.ts so identity
  * never depends on render order; read/unread comes purely from the
  * persisted notification_reads row set. A new signal has no row and is
- * therefore unread; opening it writes a row and it stays read.
+ * therefore unread; opening it writes a row and it stays read. The header
+ * count is rendered by a small client island (UnreadSummary) seeded with
+ * this server value, so opening a signal drops the count on the same click
+ * instead of waiting for a refresh.
  */
 function RealNotifications({ overview, readKeys }: { overview: LearningPathOverview; readKeys: ReadonlySet<string> }) {
   const { path } = overview;
@@ -112,9 +116,7 @@ function RealNotifications({ overview, readKeys }: { overview: LearningPathOverv
     <PageHeader
       eyebrow="Signals for your learning path"
       title="Notifications"
-      description={unread > 0
-        ? `${unread} unread ${unread === 1 ? "signal" : "signals"} from “${path.title}” — videos loading, what is next, and milestones you have earned.`
-        : `You are up to date on “${path.title}”. New signals will appear here as your path moves.`}
+      description={<UnreadSummary pathTitle={path.title} unread={unread} />}
     />
     {signals.length === 0 ? (
       <EmptyState icon={BellOff} eyebrow="ALL QUIET" title="You're all caught up." description="Nothing on your path needs attention right now. When something does — a video retry, a milestone — it will show up here." actionLabel="Open your journey" actionHref="/journey" />
