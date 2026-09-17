@@ -38,7 +38,11 @@ export function AppSidebar() {
     </div>
     <div className="sidebar-bottom">
       <div className="nav-label">Workspace</div>
-      <NavLinks items={secondary} showNotificationDot={state.hasLearningHistory} />
+      {/* The dot reflects REAL read state: it shows only while at least one
+          derived signal is still unread (no notification_reads row). It used
+          to be keyed to learning history, which lit it up for every learner
+          with lessons whether or not anything was actually unread. */}
+      <NavLinks items={secondary} showNotificationDot={state.hasUnreadNotifications} />
       {state.hasLearningPath ? (
         <div className="card" style={{ marginTop: 22, padding: 15, background: "var(--lime)", boxShadow: "none" }}>
           <Sparkles size={16} />

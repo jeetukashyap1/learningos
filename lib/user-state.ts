@@ -13,6 +13,13 @@ export interface UserStateFlags {
   hasLearningHistory: boolean;
   hasProgress: boolean;
   hasProjects: boolean;
+  /**
+   * At least one derived notification signal on the active path has not been
+   * read yet (no row in notification_reads). This is the ONLY thing the
+   * sidebar notification dot is keyed to - learning history alone must never
+   * light it up.
+   */
+  hasUnreadNotifications: boolean;
 }
 
 /**
@@ -48,6 +55,7 @@ export const EMPTY_USER_STATE: UserStateFlags = {
   hasLearningHistory: false,
   hasProgress: false,
   hasProjects: false,
+  hasUnreadNotifications: false,
 };
 
 /** State used only inside explicitly-enabled demo mode. */
@@ -56,6 +64,8 @@ export const DEMO_USER_STATE: UserStateFlags = {
   hasLearningHistory: true,
   hasProgress: true,
   hasProjects: true,
+  // Demo mode deliberately previews the finished space, dot included.
+  hasUnreadNotifications: true,
 };
 
 export const DEMO_COOKIE = "learningos-demo";

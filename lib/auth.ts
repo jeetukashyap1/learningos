@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { createSupabaseServerClient } from "./supabase/server";
+import { hasUnreadNotifications } from "./notifications/service";
 import {
   DEMO_COOKIE,
   DEMO_USER_STATE,
@@ -81,6 +82,8 @@ export async function getCurrentUserState(user?: AuthenticatedUser | null): Prom
  * - hasProgress: at least one lesson carries completed_at, the single
  *   progress signal. There is no second progress system.
  * - hasProjects: no real projects exist yet; never faked for real users.
+ * - hasUnreadNotifications: at least one derived notification signal has no
+ *   row in notification_reads. This is the ONLY input to the sidebar dot.
  *
  * On a database error the flags degrade to the honest no-path view so
  * the shell still renders without implying content that does not exist.
@@ -93,6 +96,7 @@ async function learningStateFor(userId: string): Promise<UserStateFlags> {
     hasLearningHistory: false,
     hasProgress: false,
     hasProjects: false,
+    hasUnreadNotifications: false,
   };
   try {
     const supabase = await createSupabaseServerClient();
@@ -111,11 +115,18 @@ async function learningStateFor(userId: string): Promise<UserStateFlags> {
     if (lessonsError) return { ...noPath, hasLearningPath: true };
 
     const lessonRows = lessons ?? [];
+    // Read state is a separate, optional lookup: a failure here must never
+    // break the shell, and the honest fallback is "nothing marked read yet"
+    // (the dot may show, but only because the database agreed there is a
+    // path with signals). It is computed from the same active path.
+    const unread = await hasUnreadNotifications(supabase, userId).catch(() => false);
+
     return {
       hasLearningPath: true,
       hasLearningHistory: lessonRows.length > 0,
       hasProgress: lessonRows.some((lesson) => lesson.completed_at != null),
       hasProjects: false,
+      hasUnreadNotifications: unread,
     };
   } catch {
     return noPath;

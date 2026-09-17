@@ -1,12 +1,14 @@
 import { Bell, BellOff, Clock3 } from "lucide-react";
-import Link from "next/link";
 import { PageHeader } from "@/components/app-shell";
 import { EmptyState } from "@/components/empty-state";
 import { NoLearningPath } from "@/components/no-learning-path";
 import { getCurrentUser, getCurrentUserState } from "@/lib/auth";
 import { isLearningPathError, LearningPathError } from "@/lib/learning-path/errors";
 import { loadLearningPathOverview, type LearningPathOverview } from "@/lib/learning-path/service";
+import { isNotificationError } from "@/lib/notifications/errors";
+import { buildNotificationSignals, countUnreadSignals, loadNotificationReadKeys, NO_READ_KEYS } from "@/lib/notifications/service";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { NotificationRow } from "./notification-row";
 
 /** Frozen sample notifications for anonymous demo mode only. */
 const sampleNotifications = [
@@ -35,14 +37,19 @@ export default async function NotificationsPage() {
 
   // Signed-in path holders get real signals; anonymous demo visitors
   // (state.hasLearningPath via the demo cookie) see the sample list.
+  // Read state is loaded from the persisted notification_reads table only
+  // once the path itself loaded - it is the user's own row set (RLS scoped).
   let overview: LearningPathOverview | null = null;
+  let readKeys: ReadonlySet<string> = NO_READ_KEYS;
   let loadError: LearningPathError | null = null;
   if (user) {
     const supabase = await createSupabaseServerClient();
     try {
       overview = await loadLearningPathOverview(supabase, user.id);
+      if (overview) readKeys = await loadNotificationReadKeys(supabase, user.id);
     } catch (error) {
       if (isLearningPathError(error)) loadError = error;
+      else if (isNotificationError(error)) loadError = new LearningPathError("persistence", error.safeMessage);
       else loadError = new LearningPathError("unexpected", "We could not load your path right now. Please refresh the page.");
     }
   }
@@ -55,7 +62,7 @@ export default async function NotificationsPage() {
   }
 
   if (user && overview) {
-    return <RealNotifications overview={overview} />;
+    return <RealNotifications overview={overview} readKeys={readKeys} />;
   }
 
   // Defense in depth (spec part 9): a signed-in learner whose path will
@@ -89,81 +96,40 @@ export default async function NotificationsPage() {
   </main>;
 }
 
-/** Real signals derived from the learner's active path. */
-function RealNotifications({ overview }: { overview: LearningPathOverview }) {
-  const { path, lessons, nextLessonId, completedLessonCount } = overview;
-  const total = lessons.length;
-  const nextLesson = lessons.find((lesson) => lesson.id === nextLessonId) ?? null;
-  const pendingVideos = lessons.filter((lesson) => lesson.resource_status === "pending");
-  const missingVideos = lessons.filter((lesson) => lesson.resource_status === "unavailable");
-  const recentCompletions = lessons
-    .filter((lesson) => lesson.completed_at != null)
-    .sort((a, b) => (b.completed_at ?? "").localeCompare(a.completed_at ?? ""))
-    .slice(0, 3);
-  const remaining = total - completedLessonCount;
-
-  type Signal = { title: string; detail: string; kind: string; href: string };
-  const signals: Signal[] = [];
-
-  if (pendingVideos.length > 0) {
-    signals.push({
-      title: "Videos still loading",
-      detail: `${pendingVideos.length} ${pendingVideos.length === 1 ? "lesson is" : "lessons are"} still waiting for a matched video. They finish loading in the background — you can retry from your journey.`,
-      kind: "Videos",
-      href: "/journey",
-    });
-  }
-  for (const lesson of missingVideos.slice(0, 2)) {
-    signals.push({
-      title: "No strong video found yet",
-      detail: `We could not find a highly relevant video for “${lesson.title}”. Retry the search from your journey, or open the lesson and learn without one.`,
-      kind: "Videos",
-      href: "/journey",
-    });
-  }
-  if (nextLesson) {
-    signals.push({
-      title: "Up next on your path",
-      detail: `“${nextLesson.title}” — ${nextLesson.estimated_minutes} min · ${nextLesson.level}${nextLesson.skill ? ` · ${nextLesson.skill}` : ""}.`,
-      kind: "Next up",
-      href: `/learn/${nextLesson.id}`,
-    });
-  }
-  for (const lesson of recentCompletions) {
-    signals.push({
-      title: "Lesson complete",
-      detail: `“${lesson.title}” is done${remaining > 0 ? ` — ${remaining} ${remaining === 1 ? "lesson" : "lessons"} to go on “${path.title}”` : ""}.`,
-      kind: "Milestone",
-      href: `/learn/${lesson.id}`,
-    });
-  }
-  if (total > 0 && remaining === 0) {
-    signals.push({
-      title: "Path complete",
-      detail: `You finished every lesson on “${path.title}”. Ready for the next goal? Start a new path from your library.`,
-      kind: "Milestone",
-      href: "/paths",
-    });
-  }
+/**
+ * Real signals derived from the learner's active path. The signals (and
+ * their stable keys) come from lib/notifications/service.ts so identity
+ * never depends on render order; read/unread comes purely from the
+ * persisted notification_reads row set. A new signal has no row and is
+ * therefore unread; opening it writes a row and it stays read.
+ */
+function RealNotifications({ overview, readKeys }: { overview: LearningPathOverview; readKeys: ReadonlySet<string> }) {
+  const { path } = overview;
+  const signals = buildNotificationSignals(overview);
+  const unread = countUnreadSignals(signals, readKeys);
 
   return <main className="container">
-    <PageHeader eyebrow="Signals for your learning path" title="Notifications" description={`Honest signals from “${path.title}” — videos loading, what is next, and milestones you have earned.`} />
+    <PageHeader
+      eyebrow="Signals for your learning path"
+      title="Notifications"
+      description={unread > 0
+        ? `${unread} unread ${unread === 1 ? "signal" : "signals"} from “${path.title}” — videos loading, what is next, and milestones you have earned.`
+        : `You are up to date on “${path.title}”. New signals will appear here as your path moves.`}
+    />
     {signals.length === 0 ? (
       <EmptyState icon={BellOff} eyebrow="ALL QUIET" title="You're all caught up." description="Nothing on your path needs attention right now. When something does — a video retry, a milestone — it will show up here." actionLabel="Open your journey" actionHref="/journey" />
     ) : (
       <div className="card pad" style={{ maxWidth: 850 }}>
-        {signals.map((signal, index) => (
-          <article className="list-row" key={`${signal.kind}-${signal.title}-${index}`}>
-            <div className="move-icon" style={{ background: "var(--mint)", color: "var(--ink)" }}><Bell size={18} /></div>
-            <div style={{ flex: 1 }}>
-              <div style={{ display: "flex", gap: 9, alignItems: "center" }}>
-                <strong style={{ fontSize: 13 }}>{signal.title}</strong>
-                <span className="tag">{signal.kind}</span>
-              </div>
-              <p className="muted" style={{ fontSize: 12, lineHeight: 1.5, marginTop: 5 }}>{signal.detail}</p>
-            </div>
-            <Link href={signal.href} className="btn btn-ghost" style={{ fontSize: 11, padding: "8px 12px", flexShrink: 0 }}>Open</Link>
-          </article>
+        {signals.map((signal) => (
+          <NotificationRow
+            key={signal.key}
+            signalKey={signal.key}
+            title={signal.title}
+            detail={signal.detail}
+            kind={signal.kind}
+            href={signal.href}
+            read={readKeys.has(signal.key)}
+          />
         ))}
       </div>
     )}
